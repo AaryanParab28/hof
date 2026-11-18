@@ -1,0 +1,90 @@
+.rules {
+  padding: clamp(80px, 10vw, 140px) var(--pad-x);
+  background: var(--yellow);
+  overflow: hidden;
+}
+
+.rules__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 56px;
+}
+
+.rules__head h2 {
+  font-size: clamp(56px, 8vw, 130px);
+  color: var(--purple);
+}
+
+.rules__head p {
+  max-width: 420px;
+  margin: 0;
+}
+
+.rules__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rules__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
+  padding: 28px 24px;
+  border: var(--border);
+  border-radius: 24px;
+  background: var(--cream);
+  box-shadow: var(--shadow-hard);
+}
+
+.rules__card.is-in {
+  transition:
+    opacity 0.8s ease,
+    transform var(--duration-normal) var(--ease-spring);
+}
+
+.rules__card:nth-child(2) { --tilt: 2deg; --lift: 30px; background: var(--purple); color: var(--cream); }
+.rules__card:nth-child(3) { --tilt: -2deg; background: var(--orange); }
+.rules__card:nth-child(4) { --lift: 20px; background: var(--green); color: var(--cream); }
+
+.rules__card.is-in { transform: translateY(var(--lift, 0)) rotate(var(--tilt, 0deg)); }
+.rules__card.is-in:hover { transform: translateY(-8px) rotate(-2deg); }
+
+.rules__num {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 80px;
+  line-height: 0.8;
+  opacity: 0.9;
+}
+
+.rules__card h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 30px;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.rules__card p {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 1020px) {
+  .rules__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .rules__grid { grid-template-columns: 1fr; }
+  .rules__card { min-height: 0; gap: 24px; }
+  .rules__card:nth-child(n) { --lift: 0; --tilt: 0deg; }
+}

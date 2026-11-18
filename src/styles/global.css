@@ -1,0 +1,163 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+section {
+  position: relative;
+}
+
+/* Tilted marquees bleed past the edges on purpose; clip (unlike hidden) keeps sticky working. */
+main {
+  overflow-x: clip;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Type primitives ---------- */
+.disp {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 0.86;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.outline {
+  color: transparent;
+  -webkit-text-stroke: var(--stroke, 3px) var(--stroke-color, currentColor);
+  font-weight: 700;
+}
+
+.outline--purple { --stroke-color: var(--purple); }
+.outline--yellow { --stroke-color: var(--yellow); }
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.whisper {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--radius-pill);
+  border: var(--border);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-fast);
+}
+
+.btn:hover {
+  transform: translate(-2px, -3px) rotate(-1deg);
+  box-shadow: 4px 6px 0 var(--ink);
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.btn--purple { background: var(--purple); color: var(--cream); }
+.btn--yellow { background: var(--yellow); color: var(--ink); }
+.btn--cream { background: var(--cream); color: var(--ink); }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px) rotate(var(--tilt, 0deg));
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s var(--ease-out);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--tilt, 0deg));
+}
+
+/* ---------- Shared keyframes ---------- */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bob {
+  50% { transform: translateY(-14px) rotate(1deg); }
+}
+
+@media (max-width: 760px) {
+  body { font-size: 17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: rotate(var(--tilt, 0deg));
+  }
+}

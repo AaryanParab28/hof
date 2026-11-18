@@ -1,0 +1,138 @@
+.assembly {
+  background: var(--purple);
+  color: var(--cream);
+}
+
+.assembly__scroller {
+  position: relative;
+  height: 440vh;
+}
+
+.assembly__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Reduced motion: no scroll-jacking, just the finished burger. */
+.assembly--static .assembly__scroller { height: auto; }
+.assembly--static .assembly__stage { position: relative; }
+
+.assembly__copy {
+  z-index: 2;
+  padding: 0 3vw 0 var(--pad-x);
+}
+
+.assembly__count {
+  margin: 0 0 14px;
+  color: var(--yellow);
+}
+
+.assembly__title {
+  font-size: clamp(56px, 7.5vw, 128px);
+  color: var(--yellow);
+}
+
+.assembly__step {
+  max-width: 460px;
+  min-height: 2.6em;
+  margin: 18px 0 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(22px, 2.1vw, 32px);
+}
+
+.assembly__meter {
+  display: flex;
+  gap: 6px;
+  margin-top: 22px;
+}
+
+.assembly__meter i {
+  width: 30px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 242, 207, 0.25);
+  transition: background-color var(--duration-normal);
+}
+
+.assembly__meter i.is-on {
+  background: var(--yellow);
+}
+
+.assembly__visual {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assembly__ring {
+  position: absolute;
+  width: min(50vw, 78vh);
+  aspect-ratio: 1;
+  border: 3px dashed rgba(255, 187, 1, 0.35);
+  border-radius: 50%;
+  animation: spin 60s linear infinite;
+}
+
+.assembly__stack {
+  position: relative;
+  width: min(36vw, 54vh);
+  aspect-ratio: 1696 / 2528;
+  transform-origin: 50% 68%;
+}
+
+.assembly__layer {
+  position: absolute;
+  filter: drop-shadow(0 22px 20px rgba(20, 0, 40, 0.35));
+}
+
+.assembly__layer img {
+  width: 100%;
+  height: 100%;
+}
+
+.assembly__tag {
+  position: absolute;
+  top: 40%;
+  left: calc(100% + 12px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.assembly__tag::before {
+  content: '';
+  width: 30px;
+  height: 2px;
+  background: var(--yellow);
+}
+
+@media (max-width: 760px) {
+  .assembly__stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+  }
+
+  .assembly__copy { padding: 13vh 6vw 0; }
+  .assembly__title { font-size: 15vw; }
+  .assembly__step { font-size: 20px; }
+  .assembly__visual { height: auto; padding-top: 2vh; }
+  .assembly__stack { width: min(64vw, 44vh); }
+  .assembly__ring { width: min(90vw, 60vh); }
+  .assembly__tag { display: none; }
+}

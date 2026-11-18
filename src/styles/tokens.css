@@ -1,0 +1,37 @@
+:root {
+  /* Brand palette */
+  --yellow: #ffbb01;
+  --purple: #7131a1;
+  --purple-deep: #4a1e6b;
+  --cream: #fff2cf;
+  --orange: #e85b19;
+  --orange-text: #b8410c;
+  --green: #25833b;
+  --ink: #211327;
+  --ink-a08: rgba(33, 19, 39, 0.08);
+  --ink-a12: rgba(33, 19, 39, 0.12);
+  --ink-a20: rgba(33, 19, 39, 0.2);
+
+  /* Type */
+  --font-display: 'League Spartan', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+
+  /* Space */
+  --pad-x: clamp(20px, 5vw, 72px);
+  --section-y: clamp(90px, 11vw, 150px);
+
+  /* Shape & depth */
+  --border: 3px solid var(--ink);
+  --radius-pill: 999px;
+  --shadow-hard-sm: 6px 8px 0 var(--ink);
+  --shadow-hard: 8px 10px 0 var(--ink);
+  --shadow-hard-lg: 12px 14px 0 var(--ink);
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.3, 1.6, 0.5, 1);
+  --ease-out: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --ease-wipe: cubic-bezier(0.8, 0, 0.2, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 300ms;
+}

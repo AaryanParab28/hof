@@ -1,0 +1,107 @@
+.crave {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.crave__scroller {
+  height: 330vh;
+}
+
+.crave__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.crave__frame {
+  position: absolute;
+  inset: 8vh 8vw;
+  border: 3px solid var(--cream);
+  border-radius: 36px;
+  overflow: hidden;
+}
+
+.crave__frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.25);
+  transition:
+    opacity 0.6s,
+    transform 1.4s var(--ease-out);
+}
+
+.crave__frame img.is-on {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.crave__frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(33, 19, 39, 0.1), rgba(33, 19, 39, 0.6));
+}
+
+.crave__word {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(90px, 19vw, 330px);
+  color: var(--yellow);
+  text-align: center;
+  /* Hard ink offset keeps the yellow word legible over yellow-toned photos. */
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0.04em 0.05em 0 var(--ink);
+}
+
+.crave__word .outline {
+  --stroke: 4px;
+  text-shadow: none;
+  filter: drop-shadow(0.04em 0.05em 0 var(--ink));
+}
+
+.crave__sub {
+  position: absolute;
+  bottom: 12vh;
+  left: 50%;
+  z-index: 2;
+  width: min(640px, 86vw);
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 30px);
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(33, 19, 39, 0.85);
+}
+
+.crave__idx {
+  position: absolute;
+  top: 12vh;
+  left: 11vw;
+  z-index: 2;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 760px) {
+  .crave__frame { inset: 10vh 4vw; }
+  .crave__word { font-size: 17vw; }
+  .crave__idx { left: 8vw; top: 13vh; font-size: 12px; }
+}
