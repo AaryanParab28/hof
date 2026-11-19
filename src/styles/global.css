@@ -102,19 +102,26 @@ main {
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: 0 0 0 var(--ink);
   transition:
-    transform var(--duration-fast) var(--ease-spring),
-    box-shadow var(--duration-fast);
+    translate var(--duration-fast) var(--ease-spring),
+    rotate var(--duration-fast) var(--ease-spring),
+    box-shadow var(--duration-fast) ease;
 }
 
-.btn:hover {
-  transform: translate(-2px, -3px) rotate(-1deg);
+/* Printed-sticker press: lifts off the page on hover, squashes flat on press. */
+.btn:hover,
+.btn:focus-visible {
+  translate: -2px -3px;
+  rotate: -1deg;
   box-shadow: 4px 6px 0 var(--ink);
 }
 
 .btn:active {
-  transform: translate(1px, 1px);
-  box-shadow: 0 0 0 var(--ink);
+  translate: 1px 1px;
+  rotate: 0deg;
+  box-shadow: 1px 1px 0 var(--ink);
+  transition-duration: 60ms;
 }
 
 .btn--purple { background: var(--purple); color: var(--cream); }
@@ -122,9 +129,12 @@ main {
 .btn--cream { background: var(--cream); color: var(--ink); }
 
 /* ---------- Reveal on scroll ---------- */
+/* Tilt lives on the individual `rotate` property so hover states can adjust it
+   without fighting the reveal's `transform`. */
 .reveal {
   opacity: 0;
-  transform: translateY(40px) rotate(var(--tilt, 0deg));
+  rotate: var(--tilt, 0deg);
+  transform: translateY(40px);
   transition:
     opacity 0.8s ease,
     transform 0.9s var(--ease-out);
@@ -132,7 +142,7 @@ main {
 
 .reveal.is-in {
   opacity: 1;
-  transform: translateY(0) rotate(var(--tilt, 0deg));
+  transform: none;
 }
 
 /* ---------- Shared keyframes ---------- */
@@ -158,6 +168,6 @@ main {
   }
   .reveal {
     opacity: 1;
-    transform: rotate(var(--tilt, 0deg));
+    transform: none;
   }
 }

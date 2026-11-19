@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import wordmark from '../../assets/brand/wordmark-purple.svg';
 import { NAV_LINKS, SITE } from '../../data/site';
 import { ExternalLink } from '../ui/ExternalLink';
@@ -9,6 +9,7 @@ const SCROLLED_AFTER_PX = 40;
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > SCROLLED_AFTER_PX);
@@ -22,14 +23,21 @@ export function Nav() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false);
     };
+    const onPointerDown = (e: PointerEvent) => {
+      if (headerRef.current && !headerRef.current.contains(e.target as Node)) setOpen(false);
+    };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onPointerDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
   }, [open]);
 
   const classes = ['nav', scrolled && 'is-scrolled', open && 'is-open'].filter(Boolean).join(' ');
 
   return (
-    <header className={classes}>
+    <header className={classes} ref={headerRef}>
       <a className="nav__logo" href="#top" aria-label={`${SITE.name} home`}>
         <img src={wordmark} alt="" height={40} />
       </a>

@@ -3,11 +3,19 @@ import { MENU_LISTS } from '../../data/menu';
 import { SITE } from '../../data/site';
 import { nextTabIndex } from '../../lib/tabs';
 import { ExternalLink } from '../ui/ExternalLink';
+import { Halftone } from '../ui/Halftone';
+import { Marker } from '../ui/Marker';
+import { MaskedLines } from '../ui/MaskedLines';
 import { BurgerGrid, ItemList } from './MenuPanels';
 import './menu.css';
 
-const BURGERS_TAB = { id: 'burgers', label: 'Burgers' };
-const TABS = [BURGERS_TAB, ...MENU_LISTS.map(({ id, label }) => ({ id, label }))];
+/**
+ * Burgers show as a plain list until the real burger photos arrive. Flip to true to bring
+ * back the photo cards (after giving BURGERS in data/menu.ts the real burgers and photos).
+ */
+const SHOW_BURGER_PHOTOS = false;
+const BURGERS_ID = 'burgers';
+const TABS = MENU_LISTS.map(({ id, label }) => ({ id, label }));
 
 function Wave() {
   return (
@@ -18,7 +26,7 @@ function Wave() {
 }
 
 export function Menu() {
-  const [active, setActive] = useState(BURGERS_TAB.id);
+  const [active, setActive] = useState(TABS[0].id);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const onTabKey = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -32,19 +40,19 @@ export function Menu() {
   return (
     <>
       <Wave />
-      <section className="menu" id="menu" aria-labelledby="menu-heading">
+      <section className="menu grain grain--soft" id="menu" aria-labelledby="menu-heading">
+        <Halftone tone="orange" className="menu__halftone" />
         <div className="menu__top">
-          <h2 className="disp reveal" id="menu-heading">
-            The
-            <br />
-            <span className="outline outline--purple">Menu</span>
+          <h2 className="disp reveal-lines" id="menu-heading">
+            <MaskedLines lines={['The', <span className="outline outline--purple">Menu</span>]} />
           </h2>
           <div className="reveal">
-            <p className="whisper menu__whisper">Short menu. No filler.</p>
+            <p className="whisper menu__whisper">
+              Short menu. <Marker>No filler.</Marker>
+            </p>
             <p className="menu__note">
-              Three burgers, a few sides worth fighting over, and something cold to wash it down. Live prices and
-              the full menu are on{' '}
-              <ExternalLink href={SITE.zomatoUrl}>Zomato ↗</ExternalLink>.
+              Burgers, loaded wraps, fries, salad bowls, gooey Pookies and something cold to wash it down. Order it all
+              on <ExternalLink href={SITE.zomatoUrl}>Zomato ↗</ExternalLink>.
             </p>
           </div>
         </div>
@@ -73,23 +81,16 @@ export function Menu() {
           })}
         </div>
 
-        <div
-          role="tabpanel"
-          id={`panel-${BURGERS_TAB.id}`}
-          aria-labelledby={`tab-${BURGERS_TAB.id}`}
-          hidden={active !== BURGERS_TAB.id}
-        >
-          <BurgerGrid />
-        </div>
         {MENU_LISTS.map((category) => (
           <div
             key={category.id}
+            className="menu__panel"
             role="tabpanel"
             id={`panel-${category.id}`}
             aria-labelledby={`tab-${category.id}`}
             hidden={active !== category.id}
           >
-            <ItemList items={category.items} />
+            {SHOW_BURGER_PHOTOS && category.id === BURGERS_ID ? <BurgerGrid /> : <ItemList category={category} />}
           </div>
         ))}
       </section>

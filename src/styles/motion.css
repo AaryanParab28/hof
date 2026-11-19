@@ -1,0 +1,95 @@
+/* ==========================================================================
+   Shared motion primitives: masked line reveals, marker strokes, drift.
+   Everything animates transform / opacity / stroke-dashoffset only.
+   ========================================================================== */
+
+/* ---------- Masked line reveal ----------
+   Padding + equal negative margin gives the glyphs (and outline strokes)
+   room inside the mask without changing the heading's line spacing. */
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding: 0.12em 0.08em;
+  margin: -0.12em -0.08em;
+}
+
+.mask-line__inner {
+  display: inline-block;
+  transform: translateY(108%);
+  transition: transform 0.85s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+.reveal-lines.is-in .mask-line__inner {
+  transform: none;
+}
+
+/* ---------- Marker strokes ---------- */
+.marker {
+  position: relative;
+  display: inline-block;
+  z-index: 0;
+}
+
+.marker__svg {
+  position: absolute;
+  z-index: -1;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--marker-color);
+  stroke-width: var(--marker-weight, 5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.marker--underline .marker__svg {
+  left: -3%;
+  bottom: -0.22em;
+  width: 106%;
+  aspect-ratio: 10 / 1;
+}
+
+.marker--circle .marker__svg {
+  --marker-weight: 3.5;
+  left: -16%;
+  top: 50%;
+  width: 132%;
+  aspect-ratio: 5 / 2;
+  translate: 0 -50%;
+}
+
+.marker--orange { --marker-color: var(--orange); }
+.marker--purple { --marker-color: var(--purple); }
+.marker--yellow { --marker-color: var(--yellow); }
+.marker--cream { --marker-color: var(--cream); }
+
+.marker path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.8s var(--ease-out) 0.35s;
+}
+
+.marker.is-in path {
+  stroke-dashoffset: 0;
+}
+
+/* ---------- Gentle decorative drift ---------- */
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-5deg); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mask-line__inner { transform: none; }
+  .marker path { stroke-dashoffset: 0; }
+}

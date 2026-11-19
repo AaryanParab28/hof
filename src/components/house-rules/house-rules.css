@@ -4,7 +4,18 @@
   overflow: hidden;
 }
 
+/* Peeks out from behind the cards — never behind the heading or copy. */
+.rules__halftone {
+  --halftone-opacity: 0.4;
+  width: min(620px, 90vw);
+  height: 360px;
+  left: -100px;
+  bottom: -110px;
+}
+
 .rules__head {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -24,6 +35,8 @@
 }
 
 .rules__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
@@ -32,7 +45,11 @@
   list-style: none;
 }
 
+/* Printed cards: hard offset shadow, slightly irregular tilts.
+   Reveal animates `transform`; tilt/lift/hover use the individual `rotate` and
+   `translate` properties, each with its own timing, so they never fight. */
 .rules__card {
+  --tilt: -1deg;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -42,27 +59,42 @@
   border-radius: 24px;
   background: var(--cream);
   box-shadow: var(--shadow-hard);
-}
-
-.rules__card.is-in {
+  translate: 0 var(--lift, 0px);
   transition:
     opacity 0.8s ease,
-    transform var(--duration-normal) var(--ease-spring);
+    transform 0.9s var(--ease-out),
+    translate 0.35s var(--ease-spring),
+    rotate 0.35s var(--ease-spring),
+    box-shadow 0.35s ease;
 }
 
 .rules__card:nth-child(2) { --tilt: 2deg; --lift: 30px; background: var(--purple); color: var(--cream); }
 .rules__card:nth-child(3) { --tilt: -2deg; background: var(--orange); }
-.rules__card:nth-child(4) { --lift: 20px; background: var(--green); color: var(--cream); }
+.rules__card:nth-child(4) { --tilt: 1deg; --lift: 20px; background: var(--green); color: var(--cream); }
 
-.rules__card.is-in { transform: translateY(var(--lift, 0)) rotate(var(--tilt, 0deg)); }
-.rules__card.is-in:hover { transform: translateY(-8px) rotate(-2deg); }
+.rules__card:hover {
+  translate: -3px calc(var(--lift, 0px) - 10px);
+  rotate: calc(var(--tilt) - 2.5deg);
+  box-shadow: 13px 17px 0 var(--ink);
+}
 
 .rules__num {
+  display: inline-block;
+  width: max-content;
   font-family: var(--font-display);
   font-weight: 900;
   font-size: 80px;
   line-height: 0.8;
   opacity: 0.9;
+  transform-origin: left bottom;
+  transition:
+    rotate 0.35s var(--ease-spring),
+    scale 0.35s var(--ease-spring);
+}
+
+.rules__card:hover .rules__num {
+  rotate: -6deg;
+  scale: 1.08;
 }
 
 .rules__card h3 {
@@ -84,7 +116,8 @@
 }
 
 @media (max-width: 760px) {
-  .rules__grid { grid-template-columns: 1fr; }
+  .rules__grid { grid-template-columns: 1fr; gap: 24px; }
   .rules__card { min-height: 0; gap: 24px; }
-  .rules__card:nth-child(n) { --lift: 0; --tilt: 0deg; }
+  .rules__card:nth-child(n) { --lift: 0px; }
+  .rules__halftone { left: -140px; bottom: -150px; height: 300px; }
 }

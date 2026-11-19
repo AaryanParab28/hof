@@ -1,3 +1,5 @@
+import { Halftone } from '../ui/Halftone';
+import { MaskedLines } from '../ui/MaskedLines';
 import './house-rules.css';
 
 const RULES = [
@@ -9,12 +11,11 @@ const RULES = [
 
 export function HouseRules() {
   return (
-    <section className="rules" aria-labelledby="rules-heading">
+    <section className="rules grain" aria-labelledby="rules-heading">
+      <Halftone tone="orange" className="rules__halftone" />
       <div className="rules__head">
-        <h2 className="disp reveal" id="rules-heading">
-          The Highness
-          <br />
-          <span className="outline outline--purple">house rules</span>
+        <h2 className="disp reveal-lines" id="rules-heading">
+          <MaskedLines lines={['The Highness', <span className="outline outline--purple">house rules</span>]} />
         </h2>
         <p className="reveal">
           Four rules the kitchen doesn't break. Not for rush hour, not for big orders, not even for your friend

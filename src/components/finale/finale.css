@@ -9,12 +9,14 @@
 .finale__float {
   position: absolute;
   pointer-events: none;
+  animation: drift 7s ease-in-out infinite;
 }
 
-.finale__float--splash { width: 180px; left: -30px; top: 60px; }
-.finale__float--star { width: 90px; right: 8vw; top: 90px; transform: rotate(18deg); }
-.finale__float--sparkle { width: 70px; left: 14vw; top: 46%; }
-.finale__float--sticker { width: 130px; right: 5vw; top: 44%; }
+/* Base tilt on `rotate` so it composes with the drift `transform`. */
+.finale__float--splash { width: 180px; left: -30px; top: 60px; animation-duration: 9s; }
+.finale__float--star { width: 90px; right: 8vw; top: 90px; rotate: 18deg; animation-direction: reverse; }
+.finale__float--sparkle { width: 70px; left: 14vw; top: 46%; animation-duration: 5.5s; animation-delay: -2s; }
+.finale__float--sticker { width: 130px; right: 5vw; top: 44%; animation-duration: 8s; animation-delay: -4s; }
 
 .finale__huge {
   font-size: clamp(48px, 16.5vw, 300px);
@@ -124,13 +126,17 @@
   .finale__tagline::after { width: 12vw; }
   .site-footer { padding-bottom: 96px; }
 
+  /* Centred with auto margins, not `translate`, so the shared button hover/press
+     (which uses `translate`) can't knock it off centre. */
   .mobile-order {
     display: inline-flex;
     position: fixed;
-    left: 50%;
+    left: 0;
+    right: 0;
     bottom: 14px;
     z-index: 60;
-    translate: -50% 0;
+    width: max-content;
+    margin-inline: auto;
     box-shadow: 4px 6px 0 var(--ink);
   }
 }

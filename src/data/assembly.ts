@@ -33,4 +33,4 @@ export const LAYERS: readonly BurgerLayer[] = [
   { image: l01, label: 'Sesame top', left: 420, top: 247, width: 862, height: 363, landedTop: 1196, caption: 'And the lid. Now say it with us: Highness.' },
 ];
 
-export const ASSEMBLY_INTRO = "This is the Sunlit. Scroll and we'll build it from the bottom up.";
+export const ASSEMBLY_INTRO = "This is a Highness crispy chicken burger. Scroll and we'll build it from the bottom up.";

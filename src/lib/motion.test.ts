@@ -1,5 +1,16 @@
 import { describe, expect, test } from 'vitest';
-import { clamp, easeInOutCubic, layerFrame, scrollProgress, stepIndex } from './motion';
+import { clamp, easeInOutCubic, layerFrame, lerp, scrollProgress, stepIndex } from './motion';
+
+describe('lerp', () => {
+  test('returns the endpoints at t = 0 and t = 1', () => {
+    expect(lerp(10, 20, 0)).toBe(10);
+    expect(lerp(10, 20, 1)).toBe(20);
+  });
+  test('interpolates linearly and works for negative ranges', () => {
+    expect(lerp(10, 20, 0.25)).toBe(12.5);
+    expect(lerp(0, -1, 0.5)).toBe(-0.5);
+  });
+});
 
 describe('clamp', () => {
   test('keeps values inside the range', () => {

@@ -1,4 +1,5 @@
-import { BURGERS, HEAT_LABEL, formatPrice, type Heat, type MenuItem } from '../../data/menu';
+import type { CSSProperties } from 'react';
+import { BURGERS, HEAT_LABEL, formatPrice, type Diet, type Heat, type MenuCategory } from '../../data/menu';
 import { SITE } from '../../data/site';
 import { ExternalLink } from '../ui/ExternalLink';
 
@@ -43,21 +44,38 @@ export function BurgerGrid() {
   );
 }
 
-export function ItemList({ items }: { items: readonly MenuItem[] }) {
+const DIET_LABEL: Record<Diet, string> = {
+  veg: 'Vegetarian',
+  'non-veg': 'Non-vegetarian',
+};
+
+/** Indian veg / non-veg mark: dot in a square (veg), triangle in a square (non-veg). */
+function DietMark({ diet }: { diet: Diet }) {
+  return <span className={`diet-mark diet-mark--${diet}`} role="img" aria-label={DIET_LABEL[diet]} />;
+}
+
+export function ItemList({ category }: { category: MenuCategory }) {
   return (
-    <ul className="menu-list">
-      {items.map((item) => (
-        <li key={item.name} className="menu-item">
-          <span className={`menu-item__icon swatch--${item.swatch}`} aria-hidden="true">
-            <img src={item.icon} alt="" />
-          </span>
-          <div>
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-          </div>
-          <Price price={item.price} />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="menu-list">
+        {category.items.map((item, i) => (
+          <li key={item.name} className="menu-item" style={{ '--i': i } as CSSProperties}>
+            <span className={`menu-item__icon swatch--${category.swatch}`} aria-hidden="true">
+              <img src={category.icon} alt="" />
+            </span>
+            <div>
+              <h3 className="menu-item__name">
+                {item.diet && <DietMark diet={item.diet} />}
+                <span>{item.name}</span>
+                {item.tag && <span className="menu-item__tag">{item.tag}</span>}
+              </h3>
+              <p>{item.description}</p>
+            </div>
+            <Price price={item.price} />
+          </li>
+        ))}
+      </ul>
+      {category.note && <p className="menu-note">{category.note}</p>}
+    </>
   );
 }

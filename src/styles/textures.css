@@ -1,0 +1,58 @@
+/* ==========================================================================
+   Texture system — printed, physical, restrained.
+   All textures are static tiles rendered once; nothing here animates.
+   ========================================================================== */
+
+/* ---------- Paper grain ----------
+   Sits between the section background and its content (z-index -1 inside an
+   isolated stacking context), so it never sits on top of text or photos. */
+.grain {
+  isolation: isolate;
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url('../assets/textures/grain.svg');
+  background-size: 180px 180px;
+  opacity: var(--grain-opacity, 0.55);
+}
+
+.grain--soft { --grain-opacity: 0.35; }
+
+/* ---------- Halftone dots ----------
+   Dots fade out toward the edge of the patch like a printed tint. */
+.halftone {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  color: var(--halftone-color);
+  opacity: var(--halftone-opacity, 0.55);
+  background-image: radial-gradient(circle, currentColor 0 32%, transparent 36%);
+  background-size: var(--halftone-dot, 14px) var(--halftone-dot, 14px);
+  -webkit-mask-image: radial-gradient(closest-side, #000 25%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 25%, transparent 100%);
+}
+
+.halftone--orange { --halftone-color: var(--orange); }
+.halftone--purple { --halftone-color: var(--purple); }
+.halftone--yellow { --halftone-color: var(--yellow); }
+.halftone--cream { --halftone-color: var(--cream); }
+
+/* ---------- Screen-print ink ----------
+   Speckled ink coverage for flat graphics (stickers, stamps). Never on photos. */
+.ink {
+  -webkit-mask-image: url('../assets/textures/ink-mask.svg');
+  mask-image: url('../assets/textures/ink-mask.svg');
+  -webkit-mask-size: 140px 140px;
+  mask-size: 140px 140px;
+}
+
+/* ---------- Sticker depth ----------
+   Hard offset shadow, like a cut-out stuck slightly off the page. */
+.sticker-depth {
+  filter: drop-shadow(4px 5px 0 var(--ink));
+}

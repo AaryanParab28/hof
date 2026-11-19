@@ -12,6 +12,13 @@ interface MarqueeProps {
   variant?: 'purple' | 'ink';
 }
 
+/**
+ * Runs rendered on the track. The track scrolls by exactly -50%, so each half
+ * (2 runs) must be wider than the widest viewport; otherwise a gap shows before the
+ * loop wraps. 4 runs keeps a single run of ~1400px safe up to ~2800px wide.
+ */
+const RUN_COUNT = 4;
+
 /** Tilted, endlessly scrolling word band. Decorative, so hidden from assistive tech. */
 export function Marquee({ words, icon, variant = 'purple' }: MarqueeProps) {
   const run = (copy: number) => (
@@ -27,7 +34,7 @@ export function Marquee({ words, icon, variant = 'purple' }: MarqueeProps) {
 
   return (
     <div className={`marquee marquee--${variant}`} aria-hidden="true">
-      <div className="marquee__track">{[0, 1].map(run)}</div>
+      <div className="marquee__track">{Array.from({ length: RUN_COUNT }, (_, i) => run(i))}</div>
     </div>
   );
 }
