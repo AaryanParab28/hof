@@ -18,12 +18,14 @@
 .marquee__track {
   display: flex;
   width: max-content;
-  animation: marquee 26s linear infinite;
+  /* Travels 2 runs per cycle, so duration is 2× the original per-run timing (same speed). */
+  animation: marquee 52s linear infinite;
+  will-change: transform;
 }
 
 .marquee--ink .marquee__track {
   animation-direction: reverse;
-  animation-duration: 32s;
+  animation-duration: 64s;
 }
 
 .marquee__run {
@@ -49,6 +51,7 @@
   margin: 0 0.45em;
 }
 
+/* The track holds two identical halves; shifting by exactly -50% loops seamlessly. */
 @keyframes marquee {
   to { transform: translateX(-50%); }
 }

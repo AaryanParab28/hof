@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
-const REVEAL_SELECTOR = '.reveal';
+/** `.reveal` fades a block up; `.reveal-lines` slides masked heading lines; `.marker` draws a stroke. */
+const REVEAL_SELECTOR = '.reveal, .reveal-lines, .marker';
 const VISIBLE_CLASS = 'is-in';
 const STAGGER_S = 0.08;
 const STAGGER_GROUP = 4;
 
 /**
- * Fades `.reveal` elements in the first time they enter the viewport.
- * Elements inside a `hidden` tab panel reveal when the panel is shown.
+ * Adds `is-in` to reveal targets the first time they enter the viewport, then stops
+ * watching them. Elements inside a `hidden` tab panel reveal when the panel is shown.
  */
 export function useRevealOnScroll(): void {
   useEffect(() => {
@@ -26,13 +27,15 @@ export function useRevealOnScroll(): void {
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.15 },
+      { threshold: 0.15, rootMargin: '0px 0px -6% 0px' },
     );
 
-    elements.forEach((el, i) => {
-      el.style.transitionDelay = `${(i % STAGGER_GROUP) * STAGGER_S}s`;
-      observer.observe(el);
-    });
+    elements
+      .filter((el) => el.classList.contains('reveal'))
+      .forEach((el, i) => {
+        el.style.transitionDelay = `${(i % STAGGER_GROUP) * STAGGER_S}s`;
+      });
+    elements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
   }, []);

@@ -8,10 +8,13 @@
   height: 440vh;
 }
 
+/* svh = the viewport with mobile browser chrome showing, so the stage never
+   resizes (and the burger never jumps) when the URL bar collapses mid-scroll. */
 .assembly__stage {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100svh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   align-items: center;
@@ -44,6 +47,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: clamp(22px, 2.1vw, 32px);
+  animation: rise-in 0.45s var(--ease-out) both;
 }
 
 .assembly__meter {
@@ -62,11 +66,17 @@
 
 .assembly__meter i.is-on {
   background: var(--yellow);
+  animation: meter-pop 0.35s var(--ease-spring);
+}
+
+@keyframes meter-pop {
+  50% { scale: 1 1.9; }
 }
 
 .assembly__visual {
   position: relative;
   height: 100vh;
+  height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,8 +98,11 @@
   transform-origin: 50% 68%;
 }
 
+/* Each layer gets its own compositor layer: the drop-shadow is rasterised once
+   and per-frame scroll updates are pure transforms. */
 .assembly__layer {
   position: absolute;
+  will-change: transform;
   filter: drop-shadow(0 22px 20px rgba(20, 0, 40, 0.35));
 }
 

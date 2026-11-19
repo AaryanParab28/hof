@@ -5,7 +5,7 @@ import './definition.css';
 
 export function Definition() {
   return (
-    <section className="define" aria-labelledby="define-heading">
+    <section className="define grain grain--soft" aria-labelledby="define-heading">
       <img
         className="define__photo define__photo--a reveal"
         src={threeQuarter}
@@ -15,7 +15,7 @@ export function Definition() {
         alt="The Highness burger from above, sesame bun and crispy fillet in hard sunlight"
       />
       <div className="define__sticker reveal" aria-hidden="true">
-        <img src={sticker} alt="" />
+        <img className="ink sticker-depth" src={sticker} alt="" />
         <span>
           Not
           <br />

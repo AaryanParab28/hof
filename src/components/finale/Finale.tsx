@@ -4,6 +4,8 @@ import sparkle from '../../assets/deco/sparkle-yellow.svg';
 import sticker from '../../assets/deco/sticker-green.svg';
 import { NAV_LINKS, SITE } from '../../data/site';
 import { ExternalLink } from '../ui/ExternalLink';
+import { Marker } from '../ui/Marker';
+import { MaskedLines } from '../ui/MaskedLines';
 import './finale.css';
 
 const FLOATS = [
@@ -17,13 +19,21 @@ export function Finale() {
   return (
     <section className="finale" aria-labelledby="finale-heading">
       {FLOATS.map((f) => (
-        <img key={f.className} className={`finale__float ${f.className}`} src={f.src} alt="" />
+        <img key={f.className} className={`finale__float ink ${f.className}`} src={f.src} alt="" />
       ))}
-      <h2 className="disp finale__huge reveal" id="finale-heading">
-        High<span className="outline outline--yellow">ness</span>
+      <h2 className="disp finale__huge reveal-lines" id="finale-heading">
+        <MaskedLines
+          lines={[
+            <>
+              High<span className="outline outline--yellow">ness</span>
+            </>,
+          ]}
+        />
       </h2>
       <p className="finale__tagline">{SITE.tagline}</p>
-      <p className="finale__lead reveal">Come hungry. Leave a little bit high on food.</p>
+      <p className="finale__lead reveal">
+        Come hungry. Leave a little bit <Marker tone="yellow">high on food</Marker>.
+      </p>
       <div className="finale__ctas reveal">
         <ExternalLink className="btn btn--yellow" href={SITE.zomatoUrl}>
           Order now

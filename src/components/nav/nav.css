@@ -14,8 +14,8 @@
 
 .nav.is-scrolled {
   padding-block: 10px;
-  background: rgba(255, 187, 1, 0.92);
-  backdrop-filter: blur(10px);
+  /* Near-opaque fill instead of backdrop-filter: no blur re-render on every scroll frame. */
+  background: rgba(255, 187, 1, 0.97);
   box-shadow: 0 2px 0 var(--ink);
 }
 
@@ -115,10 +115,13 @@
   font-size: 22px;
   font-weight: 900;
   cursor: pointer;
+  transition: scale 0.12s ease, rotate var(--duration-normal) var(--ease-spring);
 }
 
+.nav__toggle:active { scale: 0.92; }
+.nav.is-open .nav__toggle { rotate: 90deg; }
+
 @media (max-width: 760px) {
-  .nav__links,
   .nav__pill,
   .nav__order {
     display: none;
@@ -128,16 +131,40 @@
     display: grid;
   }
 
-  .nav.is-open .nav__links {
-    display: flex;
+  /* Always rendered on mobile so it can animate; `visibility` keeps the closed
+     menu out of the tab order and the accessibility tree. */
+  .nav__links {
     position: fixed;
     inset: 72px 12px auto;
     flex-direction: column;
-    gap: 14px;
-    padding: 20px;
+    gap: 4px;
+    padding: 14px 20px;
     background: var(--cream);
     border: var(--border);
     border-radius: 20px;
     box-shadow: var(--shadow-hard-sm);
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 -10px;
+    scale: 0.97;
+    transform-origin: top right;
+    transition:
+      opacity 0.2s ease,
+      translate var(--duration-normal) var(--ease-spring),
+      scale var(--duration-normal) var(--ease-spring),
+      visibility 0s linear var(--duration-normal);
+  }
+
+  .nav.is-open .nav__links {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    scale: 1;
+    transition-delay: 0s;
+  }
+
+  .nav__links a {
+    padding-block: 10px;
+    font-size: 18px;
   }
 }

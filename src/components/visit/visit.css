@@ -6,6 +6,7 @@
 }
 
 .visit__grid {
+  position: relative;
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   align-items: center;
@@ -27,9 +28,22 @@
   font-size: 26px;
 }
 
+.visit__halftone {
+  --halftone-opacity: 0.35;
+  width: 480px;
+  height: 360px;
+  right: -70px;
+  bottom: -90px;
+}
+
 .visit__ticket {
   --tilt: 2deg;
   position: relative;
+  z-index: 1;
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s var(--ease-out),
+    rotate 0.4s var(--ease-spring);
   padding: 34px;
   border: var(--border);
   border-radius: 28px;
@@ -50,6 +64,8 @@
   background: var(--green);
   transform: translateY(-50%);
 }
+
+.visit__ticket:hover { rotate: 0.5deg; }
 
 .visit__ticket::before { left: -19px; }
 .visit__ticket::after { right: -19px; }

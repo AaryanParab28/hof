@@ -1,5 +1,7 @@
 import { SITE } from '../../data/site';
 import { ExternalLink } from '../ui/ExternalLink';
+import { Halftone } from '../ui/Halftone';
+import { Marker } from '../ui/Marker';
 import './visit.css';
 
 export function Visit() {
@@ -13,11 +15,14 @@ export function Visit() {
             <br />
             your
             <br />
-            <span className="outline outline--yellow">fix.</span>
+            <Marker variant="circle" tone="cream">
+              <span className="outline outline--yellow">fix.</span>
+            </Marker>
           </h2>
           <p className="whisper visit__lead">Dine in, take away, or get it delivered still crunchy.</p>
         </div>
 
+        <Halftone tone="yellow" className="visit__halftone" />
         <div className="visit__ticket reveal">
           <dl>
             <dt>Where</dt>

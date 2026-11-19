@@ -9,6 +9,22 @@
 .menu {
   padding: clamp(70px, 9vw, 120px) var(--pad-x) clamp(90px, 10vw, 140px);
   background: var(--cream);
+  overflow: hidden;
+}
+
+.menu__halftone {
+  --halftone-opacity: 0.3;
+  width: 440px;
+  height: 340px;
+  right: -60px;
+  top: 40px;
+}
+
+.menu__top,
+.menu__tabs,
+.menu__panel {
+  position: relative;
+  z-index: 1;
 }
 
 .menu__top {
@@ -65,15 +81,31 @@
   transition:
     background-color var(--duration-fast),
     color var(--duration-fast),
-    transform var(--duration-fast) var(--ease-spring);
+    translate var(--duration-fast) var(--ease-spring),
+    rotate var(--duration-normal) var(--ease-spring),
+    scale 0.12s ease,
+    box-shadow var(--duration-fast);
 }
 
-.menu__tabs button:hover { transform: translateY(-2px); }
+.menu__tabs button:hover { translate: 0 -2px; }
+.menu__tabs button:active { scale: 0.95; }
 
 .menu__tabs button[aria-selected='true'] {
   background: var(--ink);
   color: var(--yellow);
-  transform: rotate(-2deg);
+  rotate: -2deg;
+  box-shadow: 3px 4px 0 var(--purple);
+}
+
+/* Category switch: the newly shown panel rises in, list items in a short stagger.
+   (Animations restart whenever a panel goes from hidden to shown.) */
+.menu__panel:not([hidden]) {
+  animation: rise-in 0.45s var(--ease-out);
+}
+
+.menu-item {
+  animation: rise-in 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 
 /* ---------- Burger cards ---------- */
@@ -92,10 +124,21 @@
   border: var(--border);
   border-radius: 28px;
   overflow: hidden;
+  box-shadow: 4px 6px 0 var(--ink);
+  transition:
+    opacity 0.8s ease,
+    transform 0.9s var(--ease-out),
+    translate 0.35s var(--ease-spring),
+    rotate 0.35s var(--ease-spring),
+    box-shadow 0.35s ease;
 }
 
-.menu-burger.is-in { transition: opacity 0.8s ease, transform var(--duration-normal) var(--ease-spring); }
-.menu-burger.is-in:hover { transform: translateY(-10px) rotate(-1deg); }
+.menu-burger:hover,
+.menu-burger:focus-within {
+  translate: 0 -10px;
+  rotate: -1deg;
+  box-shadow: 10px 16px 0 var(--ink);
+}
 
 .menu-burger--yellow { background: var(--yellow); }
 .menu-burger--purple { background: var(--purple); color: var(--cream); }
@@ -127,10 +170,15 @@
   max-width: none;
   margin: 16px -40px 10px;
   filter: drop-shadow(0 24px 22px rgba(30, 10, 0, 0.35));
-  transition: transform 0.4s var(--ease-spring);
+  transition:
+    scale 0.45s var(--ease-spring),
+    rotate 0.45s var(--ease-spring);
 }
 
-.menu-burger:hover .menu-burger__img { transform: scale(1.07) rotate(-4deg); }
+.menu-burger:hover .menu-burger__img {
+  scale: 1.06;
+  rotate: -4deg;
+}
 
 .menu-burger h3 {
   margin: auto 0 10px;
@@ -219,7 +267,8 @@
   transition: transform var(--duration-normal) var(--ease-spring);
 }
 
-.menu-item:hover .menu-item__icon { transform: rotate(-12deg) scale(1.06); }
+.menu-item:hover .menu-item__icon,
+.menu-item:focus-within .menu-item__icon { transform: rotate(-12deg) scale(1.06); }
 .menu-item__icon img { width: 44px; }
 
 .swatch--yellow { background: var(--yellow); }
@@ -237,9 +286,73 @@
   text-transform: uppercase;
 }
 
+/* Mark, name and sticker flow inline, so a wrapping name keeps the mark beside
+   its first word and the sticker after its last. */
+.menu-item__name > * {
+  vertical-align: middle;
+}
+
+/* Veg / non-veg mark, drawn the standard Indian way in a bordered square. */
+.diet-mark {
+  position: relative;
+  display: inline-block;
+  margin: -0.15em 10px 0 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--diet-color);
+  border-radius: 3px;
+  background: var(--cream);
+}
+
+.diet-mark::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  background: var(--diet-color);
+}
+
+.diet-mark--veg { --diet-color: var(--green); }
+.diet-mark--veg::after { border-radius: 50%; }
+.diet-mark--non-veg { --diet-color: var(--orange-text); }
+.diet-mark--non-veg::after { clip-path: polygon(50% 8%, 100% 92%, 0 92%); }
+
+/* "Top pick" / "Team fav": the starburst stickers from the printed menu, as a chip. */
+.menu-item__tag {
+  display: inline-block;
+  margin: -0.2em 0 0 10px;
+  white-space: nowrap;
+  padding: 4px 10px 3px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  rotate: -4deg;
+}
+
 .menu-item p {
   margin: 0;
   font-size: 15px;
+}
+
+/* Offer from the printed slide (e.g. the Fries & Sip combo), as a tilted ink sticker. */
+.menu-note {
+  display: inline-block;
+  margin: 32px 0 0;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--purple);
+  color: var(--yellow);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  rotate: -2deg;
+  box-shadow: 3px 4px 0 var(--ink);
 }
 
 @media (max-width: 1020px) {
@@ -252,7 +365,9 @@
   .menu-burgers,
   .menu-list { grid-template-columns: 1fr; }
   .menu-burger { min-height: 0; }
-  .menu-item { grid-template-columns: 56px 1fr; }
+  .menu__halftone { display: none; }
+  .menu-item { grid-template-columns: 56px 1fr; align-items: start; }
+  .menu-item__name { font-size: 22px; }
   .menu-item > :last-child { grid-column: 2; }
   .menu-item__icon { width: 56px; height: 56px; }
   .menu-item__icon img { width: 34px; }

@@ -11,6 +11,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,6 +26,9 @@
   overflow: hidden;
 }
 
+/* Crossfade without a dip to black: the incoming photo fades in on top while the
+   outgoing one holds for a beat underneath, then drifts back out. Only opacity and
+   transform animate; the photography itself is never filtered. */
 .crave__frame img {
   position: absolute;
   inset: 0;
@@ -32,62 +36,42 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform: scale(1.25);
+  transform: scale(1.16);
   transition:
-    opacity 0.6s,
-    transform 1.4s var(--ease-out);
+    opacity 0.45s ease 0.4s,
+    transform 1.6s var(--ease-out);
 }
 
 .crave__frame img.is-on {
+  z-index: 1;
   opacity: 1;
-  transform: scale(1.05);
+  transform: scale(1.04);
+  transition:
+    opacity 0.55s ease,
+    transform 1.6s var(--ease-out);
 }
 
 .crave__frame::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
   background: linear-gradient(180deg, rgba(33, 19, 39, 0.1), rgba(33, 19, 39, 0.6));
 }
 
-.crave__word {
-  position: relative;
-  z-index: 2;
-  font-size: clamp(90px, 19vw, 330px);
-  color: var(--yellow);
-  text-align: center;
-  /* Hard ink offset keeps the yellow word legible over yellow-toned photos. */
-  -webkit-text-stroke: 3px var(--ink);
-  paint-order: stroke fill;
-  text-shadow: 0.04em 0.05em 0 var(--ink);
-}
-
-.crave__word .outline {
-  --stroke: 4px;
-  text-shadow: none;
-  filter: drop-shadow(0.04em 0.05em 0 var(--ink));
-}
-
-.crave__sub {
-  position: absolute;
-  bottom: 12vh;
-  left: 50%;
-  z-index: 2;
-  width: min(640px, 86vw);
-  margin: 0;
-  transform: translateX(-50%);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(20px, 2vw, 30px);
-  text-align: center;
-  text-shadow: 0 2px 12px rgba(33, 19, 39, 0.85);
-}
-
-.crave__idx {
+/* ---------- Stage indicator ---------- */
+.crave__hud {
   position: absolute;
   top: 12vh;
   left: 11vw;
-  z-index: 2;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.crave__idx {
   margin: 0;
   padding: 8px 14px;
   border-radius: var(--radius-pill);
@@ -100,8 +84,85 @@
   text-transform: uppercase;
 }
 
+.crave__progress {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+}
+
+.crave__progress li {
+  width: 44px;
+  height: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: rgba(255, 242, 207, 0.35);
+}
+
+/* Each segment fills with its share of scroll progress — tracks the scroll exactly. */
+.crave__progress span {
+  display: block;
+  height: 100%;
+  background: var(--yellow);
+  transform-origin: left;
+  transform: scaleX(clamp(0, calc(var(--progress, 0) * var(--count, 3) - var(--i, 0)), 1));
+}
+
+/* ---------- Word + caption ---------- */
+/* Full-width box: swapping Crunch/Drip/Melt changes only the glyphs, never the
+   heading's own box, so word changes cause no layout shift. */
+.crave__word {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  font-size: clamp(90px, 19vw, 330px);
+  color: var(--yellow);
+  text-align: center;
+  /* Hard ink offset keeps the yellow word legible over yellow-toned photos. */
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0.04em 0.05em 0 var(--ink);
+}
+
+.crave__word > span {
+  display: inline-block;
+  animation: crave-word-in 0.55s var(--ease-out) both;
+}
+
+.crave__word .outline {
+  --stroke: 4px;
+  text-shadow: none;
+  filter: drop-shadow(0.04em 0.05em 0 var(--ink));
+}
+
+@keyframes crave-word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.16em) scale(0.94);
+  }
+}
+
+.crave__sub {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12vh;
+  z-index: 3;
+  width: min(640px, 86vw);
+  margin: 0 auto;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 30px);
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(33, 19, 39, 0.85);
+  animation: rise-in 0.5s var(--ease-out) 0.08s both;
+}
+
 @media (max-width: 760px) {
   .crave__frame { inset: 10vh 4vw; }
   .crave__word { font-size: 17vw; }
-  .crave__idx { left: 8vw; top: 13vh; font-size: 12px; }
+  .crave__hud { left: 8vw; top: 13vh; }
+  .crave__idx { font-size: 12px; }
+  .crave__progress li { width: 34px; }
 }
