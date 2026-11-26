@@ -1,5 +1,13 @@
 import type { CSSProperties } from 'react';
-import { BURGERS, HEAT_LABEL, formatPrice, type Diet, type Heat, type MenuCategory } from '../../data/menu';
+import {
+  BURGERS,
+  HEAT_LABEL,
+  formatPrice,
+  type Diet,
+  type Heat,
+  type MenuCategory,
+  type MenuItem,
+} from '../../data/menu';
 import { SITE } from '../../data/site';
 import { ExternalLink } from '../ui/ExternalLink';
 
@@ -47,9 +55,25 @@ export function BurgerGrid() {
 const DIET_LABEL: Record<Diet, string> = {
   veg: 'Vegetarian',
   'non-veg': 'Non-vegetarian',
+  egg: 'Contains egg',
 };
 
-/** Indian veg / non-veg mark: dot in a square (veg), triangle in a square (non-veg). */
+/** Single price, or the printed choices ("Paneer ₹303 · Egg ₹330 · …") stacked. */
+function ItemPrice({ item }: { item: MenuItem }) {
+  if (!item.options?.length) return <Price price={item.price} />;
+  return (
+    <dl className="menu-price-options">
+      {item.options.map((o) => (
+        <div key={o.label}>
+          <dt>{o.label}</dt>
+          <dd className="menu-price">{formatPrice(o.price)}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** Indian diet mark: dot in a square (veg), triangle (non-veg), yellow dot (egg, as printed). */
 function DietMark({ diet }: { diet: Diet }) {
   return <span className={`diet-mark diet-mark--${diet}`} role="img" aria-label={DIET_LABEL[diet]} />;
 }
@@ -69,9 +93,9 @@ export function ItemList({ category }: { category: MenuCategory }) {
                 <span>{item.name}</span>
                 {item.tag && <span className="menu-item__tag">{item.tag}</span>}
               </h3>
-              <p>{item.description}</p>
+              {item.description && <p>{item.description}</p>}
             </div>
-            <Price price={item.price} />
+            <ItemPrice item={item} />
           </li>
         ))}
       </ul>

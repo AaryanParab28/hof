@@ -10,8 +10,14 @@ import burstOrange from '../assets/deco/burst-orange.svg';
 
 export type Swatch = 'yellow' | 'purple' | 'orange' | 'green' | 'cream';
 export type Heat = 1 | 2 | 3;
-export type Diet = 'veg' | 'non-veg';
-export type MenuTag = 'Top pick' | 'Team fav' | 'New';
+export type Diet = 'veg' | 'non-veg' | 'egg';
+export type MenuTag = 'Top pick' | 'Highness fav' | 'New drop' | 'Cheesy';
+
+/** One of several printed prices for the same dish, e.g. "Veg ₹240 / Non-veg ₹303". */
+export interface PriceOption {
+  label: string;
+  price: number;
+}
 
 export interface Burger {
   name: string;
@@ -27,9 +33,12 @@ export interface Burger {
 
 export interface MenuItem {
   name: string;
-  description: string;
-  /** Price in whole ₹. Undefined shows a "Price on Zomato" link instead. */
+  /** Add-ons are printed without one. */
+  description?: string;
+  /** Price in whole ₹. Undefined (with no options) shows a "Price on Zomato" link instead. */
   price?: number;
+  /** Used instead of `price` when the menu prints several prices for one dish. */
+  options?: readonly PriceOption[];
   diet?: Diet;
   tag?: MenuTag;
 }
@@ -89,8 +98,72 @@ export const HEAT_LABEL: Record<Heat, string> = {
   3: 'Hot',
 };
 
-/** Transcribed from the Highness menu posted 11 August (all eight slides). */
+/** Fries that come in both a veg and a non-veg (red-priced) version. */
+const VEG_NON_VEG_FRIES: readonly PriceOption[] = [
+  { label: 'Veg', price: 240 },
+  { label: 'Non-veg', price: 303 },
+];
+
+/** Salad bowls with a choice of protein. */
+const BOWL_PROTEIN: readonly PriceOption[] = [
+  { label: 'Paneer', price: 303 },
+  { label: 'Egg', price: 330 },
+  { label: 'Chicken', price: 330 },
+];
+
+/** Transcribed from the 2026 Highness A4 menu (Fries through Add ons, combos lifted onto their own tab). */
 export const MENU_LISTS: readonly MenuCategory[] = [
+  {
+    id: 'fries',
+    label: 'Fries',
+    icon: burstOrange,
+    swatch: 'yellow',
+    items: [
+      {
+        name: 'Big Bite Loaded Fries',
+        description:
+          'Crispy golden fries, crispy chicken bites, mozzarella cheese, cheddar cheese sauce, signature sauces, jalapeño cheese ball.',
+        price: 303,
+        diet: 'non-veg',
+        tag: 'Top pick',
+      },
+      {
+        name: 'Angry Bird Fries',
+        description: 'Crispy golden fries, five signature sauces, jalapeño cheese ball.',
+        price: 222,
+        diet: 'veg',
+        tag: 'Top pick',
+      },
+      {
+        name: 'Nachos Cheese Fries',
+        description: 'Crispy golden fries, creamy nacho cheese sauce, avocado salsa mayo.',
+        price: 222,
+        diet: 'veg',
+        tag: 'Highness fav',
+      },
+      {
+        name: 'Magic Fries',
+        description:
+          'Crispy fried Maggi loaded with our signature cheesy blend sauce and a spicy hot sauce kick. A magical mix of crunch, cheese and heat!',
+        options: VEG_NON_VEG_FRIES,
+        tag: 'New drop',
+      },
+      {
+        name: 'Mac Daddy Fries',
+        description:
+          "Golden crispy fries loaded with rich, creamy mac and cheese, smothered in cheesy goodness. A double-carb, double-cheese attack you won't forget!",
+        options: VEG_NON_VEG_FRIES,
+        tag: 'New drop',
+      },
+      {
+        name: 'Cheesy Margarita Fries',
+        description:
+          'Crispy golden fries topped with rich pizza sauce, melted mozzarella and cheddar cheese, baked to bubbly, cheesy perfection.',
+        options: VEG_NON_VEG_FRIES,
+        tag: 'New drop',
+      },
+    ],
+  },
   {
     id: 'burgers',
     label: 'Burgers',
@@ -101,47 +174,75 @@ export const MENU_LISTS: readonly MenuCategory[] = [
         name: 'Jalepeno Smash Melt',
         description:
           'Smashed chicken patty, egg patty, cheddar cheese, jalapeños, spicy mayo, caramelised onions, lettuce, herb bun.',
-        price: 299,
+        price: 321,
         diet: 'non-veg',
-        tag: 'Top pick',
       },
       {
-        name: 'Seoul Fried Boss',
-        description: 'Crispy fried chicken, Korean chilli sauce, coleslaw, mayo, lettuce, sesame bun.',
-        price: 299,
+        name: 'The Ghostfather',
+        description:
+          'Two fiery Bhut Jolokia chicken smash patties, melted cheddar, egg patty and fresh onions, stacked in a toasted herb bun. Bold, cheesy and dangerously spicy.',
+        price: 321,
         diet: 'non-veg',
-        tag: 'Top pick',
+        tag: 'New drop',
       },
       {
-        name: 'Lebanese Legend',
-        description: 'Lebanese patty, hummus, garlic sauce, lettuce, cheddar cheese, herb bun.',
-        price: 299,
+        name: "Chop N' Cheese",
+        description:
+          'Juicy chopped chicken, melted cheese and a perfectly cooked egg, smothered in rich cheddar sauce and stacked in a toasted burger bun. Messy, cheesy and absolutely irresistible.',
+        price: 321,
+        diet: 'non-veg',
+        tag: 'New drop',
+      },
+      {
+        name: 'Tokyo Heatwave',
+        description:
+          'Crispy fried chicken patty glazed with our signature Tokyo Smoke BBQ sauce, layered with fiery jalapeño sauce and tucked inside a toasted bun. Sweet, smoky, spicy and seriously addictive.',
+        price: 321,
+        diet: 'non-veg',
+        tag: 'New drop',
+      },
+      {
+        name: 'Smoky Teriyaki Crunch',
+        description:
+          'Crispy fried chicken coated in fiery peri-peri seasoning, drizzled with smoky garlic and signature teriyaki sauce. A delicious collision of spice, smoke and sweet-savoury goodness.',
+        price: 321,
         diet: 'non-veg',
       },
       {
         name: 'Melted Majesty',
         description: 'Crispy fried chicken, cheddar cheese, blended cheese sauce, coleslaw, brioche bun.',
-        price: 299,
+        price: 321,
         diet: 'non-veg',
+        tag: 'Cheesy',
       },
       {
         name: 'Truffle Tease',
         description:
           'Crisp fried patty, caramelised forest mushrooms, mozzarella cheese, velvety white truffle aioli, melted smoked mozzarella, brioche bun.',
-        price: 369,
+        price: 402,
         diet: 'veg',
-        tag: 'New',
+        tag: 'Top pick',
+      },
+      {
+        name: 'Velique Paneer',
+        description:
+          "Two slabs of juicy malai paneer, fiery bird's eye chilli sauce, zesty lime, caramelised onions and a mozzarella-cheddar melt. Creamy, spicy and royally indulgent.",
+        price: 330,
+        diet: 'veg',
+        tag: 'New drop',
+      },
+      {
+        name: 'Parsi Jalapeño Royal',
+        description:
+          'A crispy cheese-and-jalapeño potato patty layered with fiery chilli-garlic sauce, creamy cheese sauce and crunchy fried onions, tucked into a buttery brioche bun. A royal twist on comfort food.',
+        price: 240,
+        diet: 'veg',
+        tag: 'New drop',
       },
       {
         name: 'Banarasi Aloo Tikki',
-        description: 'Crispy aloo tikki, tangy chutneys, onion, tomatoes, brioche bun.',
-        price: 229,
-        diet: 'veg',
-      },
-      {
-        name: 'Corn Crown',
-        description: 'Corn patty, house signature sauce, molten cheese spinach corn, herb bun.',
-        price: 259,
+        description: 'Crispy aloo tikki, tangy chutneys, cucumber, tomatoes, brioche bun.',
+        price: 240,
         diet: 'veg',
       },
     ],
@@ -156,103 +257,99 @@ export const MENU_LISTS: readonly MenuCategory[] = [
         name: 'Dragon Chicken Roll',
         description:
           'Crispy chicken, dragon sauce, crunchy cabbage, capsicum, onions, spring onions, spicy mayo, soft tortilla wrap.',
-        price: 289,
+        price: 303,
         diet: 'non-veg',
         tag: 'Top pick',
       },
       {
         name: "Sultan's Garlic Chicken Roll",
         description: 'Arabic-spiced chicken, creamy garlic mayo, onion, cucumber, pickles, herbs, soft tortilla wrap.',
-        price: 289,
+        price: 303,
         diet: 'non-veg',
-        tag: 'Team fav',
+      },
+      {
+        name: 'Crunchzilla Roll',
+        description:
+          'Crispy fried chicken, creamy cheese sauce, fresh lettuce and fiery signature sauce, wrapped in your choice of bread. Crunchy, cheesy and seriously addictive.',
+        price: 303,
+        diet: 'non-veg',
+        tag: 'New drop',
+      },
+      {
+        name: 'Caesar Royale Roll',
+        description:
+          'Double-egg-loaded Malabar paratha paired with fresh, creamy Caesar salad. A royal twist on the classic egg roll!',
+        price: 303,
+        diet: 'non-veg',
+        tag: 'New drop',
       },
       {
         name: 'Bombay Tawa Chicken Roll',
         description:
-          'Tender tawa chicken, Mumbai masala, onions, capsicum, mint chutney, spicy mayo, fresh coriander, soft tortilla wrap.',
-        price: 289,
-        diet: 'non-veg',
-      },
-      {
-        name: 'Nizam Street King Kathi Roll',
-        description:
-          'Grilled chicken, egg, Kolkata-style spices, pickled onions, mint chutney, spicy mayo, fresh coriander.',
-        price: 289,
+          'Tender tawa chicken, Mumbai masala, onions, capsicum, mint chutney, spicy mayo, fresh coriander, Malabar paratha.',
+        price: 303,
         diet: 'non-veg',
       },
       {
         name: 'Mumbai Lava Paneer Roll',
         description:
-          'Tandoori paneer, green thecha, onion, capsicum, mint mayo, mozzarella cheese, fresh coriander, soft tortilla wrap.',
-        price: 249,
+          'Tandoori paneer, green thecha, onion, capsicum, mint mayo, mozzarella cheese, choice of bread.',
+        price: 240,
         diet: 'veg',
         tag: 'Top pick',
       },
       {
         name: 'Crunch Dynasty Roll',
         description:
-          'Veg Manchurian balls, dragon sauce, onion, capsicum, spring onions, asian sesame sauce, spicy mayo, soft tortilla wrap.',
-        price: 229,
+          'Veg Manchurian balls, dragon sauce, onion, capsicum, spring onions, Asian sesame sauce, spicy mayo, soft tortilla wrap.',
+        price: 240,
         diet: 'veg',
       },
       {
-        name: 'Crown Kofta Roll',
+        name: 'Falafel Fiesta',
         description:
-          'Lauki kofta, onion, creamy makhani sauce, mozzarella cheese, fresh coriander, soft tortilla wrap.',
-        price: 229,
+          'Crispy falafel with fresh cucumber, lettuce and tomatoes, drizzled with creamy tahini and garlic sauce. A fresh Lebanese-style delight.',
+        price: 240,
         diet: 'veg',
-      },
-      {
-        name: 'Arbi Kakori Roll',
-        description:
-          'Arbi kakori kebabs, pickled onions, cucumber, mint chutney, creamy mayo, fresh coriander, soft tortilla wrap.',
-        price: 229,
-        diet: 'veg',
-      },
-      {
-        name: 'Royal Garlic Cheese Fries Roll',
-        description:
-          'Crispy fries, mozzarella cheese, creamy garlic sauce, spinach, herbs, chilli flakes, soft tortilla wrap.',
-        price: 229,
-        diet: 'veg',
+        tag: 'New drop',
       },
     ],
   },
   {
-    id: 'fries',
-    label: 'Fries',
-    icon: burstOrange,
-    swatch: 'yellow',
-    note: 'Fries & Sip combo @ ₹279. Dine-in only.',
+    id: 'combos',
+    label: 'Combos',
+    icon: sparkle,
+    swatch: 'orange',
     items: [
       {
-        name: 'Big Bite Loaded Fries',
-        description:
-          'Crispy golden fries, crispy chicken bites, mozzarella cheese, cheddar cheese sauce, signature sauces, jalapeños, caramelised onions.',
-        price: 239,
+        name: 'The Highness Classic',
+        description: 'Any ₹321 chicken burger + Angry Bird Fries + any milkshake.',
+        price: 699,
         diet: 'non-veg',
-        tag: 'Top pick',
       },
       {
-        name: 'Angry Bird Fries',
-        description: 'Crispy golden fries, five signature sauces, melted cheese, jalapeños, chilli flakes.',
-        price: 219,
-        diet: 'veg',
-        tag: 'Top pick',
+        name: 'The Double Trouble',
+        description: 'Any two ₹321 chicken burgers + Big Bite Loaded Fries + two milkshakes.',
+        price: 1299,
+        diet: 'non-veg',
       },
       {
-        name: 'Korean Fries',
-        description: 'Crispy golden fries, Korean gochujang sauce, spicy mayo, spring onions, chilli flakes.',
-        price: 199,
+        name: 'The Truffle Highness',
+        description: 'Truffle Tease Burger + Nachos Cheese Fries + any milkshake.',
+        price: 799,
         diet: 'veg',
       },
       {
-        name: 'Nachos Cheese Fries',
-        description: 'Crispy golden fries, creamy nacho cheese sauce, jalapeños, herbs.',
-        price: 199,
+        name: 'The Roll Royale',
+        description: 'Any ₹303 chicken roll + Angry Bird Fries + any milkshake.',
+        price: 679,
+        diet: 'non-veg',
+      },
+      {
+        name: 'The Veg Royal',
+        description: 'Any ₹240 veg burger or veg roll + Angry Bird Fries + any milkshake.',
+        price: 629,
         diet: 'veg',
-        tag: 'Team fav',
       },
     ],
   },
@@ -263,32 +360,72 @@ export const MENU_LISTS: readonly MenuCategory[] = [
     swatch: 'yellow',
     items: [
       {
-        name: 'Creamy Grill Chicken Protein Bowl',
+        name: 'Creamy Grill Protein Bowl',
         description:
-          'Grilled chicken, hung curd, creamy mayo dressing, lettuce, cucumber, sweet corn, herbs, cracked pepper.',
-        price: 369,
-        diet: 'non-veg',
+          'Grilled protein, hung curd, creamy mayo dressing, lettuce, cucumber, sweet corn, herbs, cracked pepper.',
+        options: BOWL_PROTEIN,
+        tag: 'Highness fav',
       },
       {
-        name: 'Sprout Makhana Chaat Bowl',
+        name: 'Crunchy Caesar Bowl',
         description:
-          'Sprouted lentils, roasted makhana, cucumber, onion, tomato, coriander, mint chutney, olive oil lemon dressing, chaat masala.',
-        price: 349,
-        diet: 'veg',
+          'Fresh lettuce and cucumber tossed in our creamy Caesar dressing, finished with crispy golden breadcrumbs and your choice of protein. Fresh, creamy and satisfyingly crunchy.',
+        options: BOWL_PROTEIN,
+      },
+      {
+        name: 'Ranch Royale Bowl',
+        description:
+          'Fresh-cut vegetables and crunchy sprouts tossed in our signature creamy ranch dressing, topped with your choice of protein. A refreshing, wholesome bowl packed with flavour.',
+        options: BOWL_PROTEIN,
       },
       {
         name: 'Butter Garlic Corn Bowl',
         description: 'Sweet corn, butter garlic seasoning, parsley, cracked pepper, herbs, chilli flakes.',
-        price: 349,
+        price: 330,
         diet: 'veg',
-        tag: 'Team fav',
+      },
+    ],
+  },
+  {
+    id: 'beverages',
+    label: 'Beverages',
+    icon: cluster,
+    swatch: 'cream',
+    items: [
+      {
+        name: 'Oreo Madness',
+        description:
+          'Thick, creamy milkshake blended with crunchy Oreo cookies for the ultimate chocolatey, cookies-and-cream indulgence. Pure happiness in every sip.',
+        price: 231,
+        tag: 'Top pick',
       },
       {
-        name: 'Crispy Chickpeas Bombay Bowl',
+        name: 'Midnight Chocolate',
         description:
-          'Crispy masala chickpeas, fresh vegetables, hung curd dressing, Bombay spice blend, coriander, lemon, crunchy garnish.',
-        price: 349,
-        diet: 'veg',
+          'Thick, creamy milkshake blended with rich dark chocolate for an indulgent, deep chocolate hit in every sip.',
+        price: 231,
+        tag: 'New drop',
+      },
+      {
+        name: 'Hazelnut Frost',
+        description:
+          'Chilled, creamy coffee blended with rich hazelnut flavour, delivering the perfect balance of nutty sweetness and refreshing coffee goodness.',
+        price: 231,
+        tag: 'New drop',
+      },
+      {
+        name: 'Salted Caramel Bliss',
+        description:
+          'Creamy, buttery caramel blended with a hint of sea salt for the perfect balance of sweet, salty and indulgent.',
+        price: 231,
+        tag: 'New drop',
+      },
+      {
+        name: 'Biscoff Royale',
+        description:
+          'Thick, creamy milkshake blended with rich Biscoff spread and crunchy caramelised biscuit goodness. Pure indulgence in every sip!',
+        price: 231,
+        tag: 'New drop',
       },
     ],
   },
@@ -303,13 +440,13 @@ export const MENU_LISTS: readonly MenuCategory[] = [
         description: "Soft red velvet cookie with a creamy cheesecake center that's impossible to resist.",
         price: 279,
         diet: 'veg',
+        tag: 'Highness fav',
       },
       {
         name: 'White Gold',
         description: 'Buttery cookie filled with silky white chocolate and luscious sea salt caramel.',
         price: 279,
         diet: 'veg',
-        tag: 'Team fav',
       },
       {
         name: 'Caramel Craze',
@@ -339,35 +476,18 @@ export const MENU_LISTS: readonly MenuCategory[] = [
     ],
   },
   {
-    id: 'beverages',
-    label: 'Beverages',
-    icon: cluster,
-    swatch: 'cream',
+    id: 'add-ons',
+    label: 'Add ons',
+    icon: starPurple,
+    swatch: 'green',
     items: [
-      {
-        name: 'Oreo Shake',
-        description:
-          'Creamy, crunchy and irresistibly delicious, loaded with Oreo goodness and topped with chocolatey indulgence.',
-        price: 229,
-        tag: 'Top pick',
-      },
-      {
-        name: 'Chocolate Milkshake',
-        description: 'Rich, creamy and indulgent, blended with luscious chocolate for the ultimate sweet treat.',
-        price: 209,
-      },
-      {
-        name: 'Cold Coffee',
-        description: 'Smooth, creamy and refreshingly chilled, with the perfect balance of rich coffee and milk.',
-        price: 209,
-        tag: 'Top pick',
-      },
-      {
-        name: 'Green Glow Juice',
-        description:
-          'Refreshing blend of fresh greens and fruits, packed with natural goodness and a vibrant, refreshing flavour.',
-        price: 149,
-      },
+      { name: 'Choice of Sauce', price: 29, diet: 'veg' },
+      { name: 'Cheese', price: 39, diet: 'veg' },
+      { name: 'Veg Patty', price: 99, diet: 'veg' },
+      { name: 'Egg', price: 45, diet: 'egg' },
+      { name: 'Grilled Chicken', price: 109, diet: 'non-veg' },
+      { name: 'Fried Chicken', price: 109, diet: 'non-veg' },
+      { name: 'Non-veg Patty', price: 139, diet: 'non-veg' },
     ],
   },
 ];

@@ -238,6 +238,17 @@
   text-underline-offset: 3px;
 }
 
+/* Printed on every page of the menu; keep it visible but quiet. */
+.menu__halal {
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
 /* ---------- List items ---------- */
 .menu-list {
   display: grid;
@@ -315,6 +326,30 @@
 .diet-mark--veg::after { border-radius: 50%; }
 .diet-mark--non-veg { --diet-color: var(--orange-text); }
 .diet-mark--non-veg::after { clip-path: polygon(50% 8%, 100% 92%, 0 92%); }
+.diet-mark--egg { --diet-color: var(--egg); }
+.diet-mark--egg::after { border-radius: 50%; }
+
+/* Several printed prices for one dish: small label over each price, side by side. */
+.menu-price-options {
+  display: flex;
+  gap: 14px;
+  margin: 0;
+  text-align: right;
+}
+
+.menu-price-options dt {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.menu-price-options dd {
+  display: block;
+  margin: 0;
+  font-size: 22px;
+}
 
 /* "Top pick" / "Team fav": the starburst stickers from the printed menu, as a chip. */
 .menu-item__tag {
@@ -371,4 +406,5 @@
   .menu-item > :last-child { grid-column: 2; }
   .menu-item__icon { width: 56px; height: 56px; }
   .menu-item__icon img { width: 34px; }
+  .menu-price-options { text-align: left; }
 }
