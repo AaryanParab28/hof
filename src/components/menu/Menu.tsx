@@ -51,9 +51,10 @@ export function Menu() {
               Short menu. <Marker>No filler.</Marker>
             </p>
             <p className="menu__note">
-              Burgers, loaded wraps, fries, salad bowls, gooey Pookies and something cold to wash it down. Order it all
-              on <ExternalLink href={SITE.zomatoUrl}>Zomato ↗</ExternalLink>.
+              Loaded fries, burgers, wraps, combos, salad bowls, gooey Pookies and thick shakes to wash it down. Order
+              it all on <ExternalLink href={SITE.zomatoUrl}>Zomato ↗</ExternalLink>.
             </p>
+            <p className="menu__halal">We only serve halal meat.</p>
           </div>
         </div>
 
